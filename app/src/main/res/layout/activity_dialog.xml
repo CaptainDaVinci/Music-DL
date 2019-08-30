@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="10dp"
+    tools:context="com.example.application.musicdownloader.MainActivity">
+
+    <TextView
+        android:id="@+id/filename_label"
+        android:text="@string/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_marginStart="5dp"
+        android:maxLines="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adele-Hello"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_green_dark"
+        android:layout_toRightOf="@id/filename_label"/>
+
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:layout_centerHorizontal="true"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/title"
+        android:layout_marginTop="15dp"
+        android:scaleType="fitCenter"
+        android:src="@android:drawable/ic_popup_sync" />
+
+</RelativeLayout>

@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Music-DL</string>
+    <string name="search_song">Search Song</string>
+    <string name="download">Download</string>
+    <string name="link_to_video">Link to video</string>
+    <string name="high_quality">High</string>
+    <string name="low_quality">Low</string>
+    <string name="quality">Quality</string>
+    <string name="format">Format</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="audio">Audio</string>
+    <string name="video">Video</string>
+    <string name="title">Title</string>
+    <string name="aboutMenuItem">About</string>
+    <string name="about">
+        Music-DL now runs on its own server, powered by YouTube-DL.
+        Running its own server implies it is no longer free.\n\nIf you would like to contribute
+        or suggest new features, ping me on
+        <a href="mailto:captaindavinci@outlook.com?subject=MusicDL">captaindavinci@outlook.com</a>.
+    </string>
+    <string name="credits">Powered by YouTube-DL</string>
+    <string name="new_update">New version available!</string>
+
+    <string-array name="format">
+        <item>@string/audio</item>
+        <item>@string/video</item>
+    </string-array>
+
+    <string-array name="quality">
+        <item>@string/high_quality</item>
+        <item>@string/low_quality</item>
+    </string-array>
+</resources>

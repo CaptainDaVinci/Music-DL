@@ -1,0 +1,12 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+/app/google-services.json
+/app/src/main/res/xml/remote_config.xml

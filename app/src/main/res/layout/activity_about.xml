@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    tools:context=".AboutActivity">
+
+    <TextView
+        android:id="@+id/new_update_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textColorLink="@android:color/holo_green_light"
+        android:textSize="20sp"
+        android:visibility="gone"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/new_update_textView"
+        android:autoLink="email|web"
+        android:linksClickable="true"
+        android:text="@string/about"
+        android:textColor="@android:color/black"
+        android:textColorLink="@android:color/holo_blue_light"
+        android:textSize="18sp"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:text="@string/credits"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"></TextView>
+
+</RelativeLayout>

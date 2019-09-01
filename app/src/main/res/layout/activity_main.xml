@@ -94,20 +94,35 @@
         android:textSize="18sp"
         android:textColor="@android:color/holo_red_light"/>
 
-    <LinearLayout
-        android:id="@+id/progressLayout"
-        android:layout_below="@+id/status_text"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/spinning_progress"
+        android:layout_below="@+id/status_text"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_height="8dp"
+        android:layout_below="@+id/status_text"
+        android:layout_centerHorizontal="true"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="10dp"
+        android:progressDrawable="@drawable/progress_bar"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/progress_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progress_bar"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:visibility="gone"></TextView>
 
 </RelativeLayout>

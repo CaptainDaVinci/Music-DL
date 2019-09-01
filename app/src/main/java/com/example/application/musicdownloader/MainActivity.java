@@ -2,12 +2,12 @@ package com.example.application.musicdownloader;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,10 +43,16 @@ import com.example.application.musicdownloader.query.Quality;
 import com.example.application.musicdownloader.query.Query;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
+import okio.Buffer;
+import okio.BufferedSink;
+import okio.BufferedSource;
+import okio.Okio;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,8 +60,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MUSICDL";
     private EditText inputText;
-    private TextView statusTextView;
-    private LinearLayout progress;
+    private TextView statusTextView, progressPercent;
+    private ProgressBar spinningProgress, progressBar;
     private Query query;
 
     @Override
@@ -70,7 +76,9 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "Starting main activity");
         inputText = findViewById(R.id.input_text);
         statusTextView = findViewById(R.id.status_text);
-        progress = findViewById(R.id.progressLayout);
+        spinningProgress = findViewById(R.id.spinning_progress);
+        progressBar = findViewById(R.id.progress_bar);
+        progressPercent = findViewById(R.id.progress_percent);
 
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config);
@@ -91,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void setStatus(String msg, int color) {
+        statusTextView.setTextColor(color);
+        statusTextView.setText(msg);
+    }
+
     public void buttonClicked(final View view) {
         Log.i(TAG, "Download button clicked");
 
@@ -99,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
-        statusTextView.setText("");
+        setStatus("", Color.BLACK);
         query = new Query();
         query.setSearch(inputText.getText().toString());
 
@@ -138,9 +151,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void clearButton(View view) {
         inputText.setText("");
-        statusTextView.setText("");
-        progress.setVisibility(View.GONE);
-    };
+        setStatus("", Color.BLACK);
+        spinningProgress.setVisibility(View.GONE);
+    }
 
     private boolean hasNetwork() {
         ConnectivityManager connectivityManager
@@ -185,7 +198,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void searchQuery() {
-        progress.setVisibility(View.VISIBLE);
+        setStatus("Searching", Color.BLACK);
+        spinningProgress.setVisibility(View.VISIBLE);
+
         YouTubeDataService service = APIClientInstance.getYouTubeRetrofitInstance().create(YouTubeDataService.class);
         Call<YouTubeData> call = service.getYouTubeData("snippet",
                 query.getSearch(),
@@ -198,8 +213,8 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<YouTubeData> call, Response<YouTubeData> response) {
                 Log.i(TAG, "Obtained YouTube response");
                 if (!response.isSuccessful() || response.body() == null) {
-                    progress.setVisibility(View.GONE);
-                    statusTextView.setText("Oh, snap! Search failed.");
+                    spinningProgress.setVisibility(View.GONE);
+                    setStatus("Oh, snap! Search failed", Color.BLACK);
                     Log.d(TAG, "YouTube error: " + response.message());
                 } else {
                     showResponse(response.body());
@@ -208,15 +223,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<YouTubeData> call, Throwable t) {
-                progress.setVisibility(View.GONE);
-                statusTextView.setText("Oh, snap! Search failed.");
+                spinningProgress.setVisibility(View.GONE);
+                setStatus("Oh, snap! Search failed", Color.BLACK);
                 Log.d(TAG, "YouTube error: " + t.getMessage());
             }
         });
     }
 
     private void showResponse(final YouTubeData data) {
-        progress.setVisibility(View.GONE);
+        spinningProgress.setVisibility(View.GONE);
+        setStatus("", Color.BLACK);
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.activity_dialog, null);
@@ -234,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
-                    statusTextView.setText("Cancelled");
+                    setStatus("Cancelled", Color.BLACK);
                     break;
             }
         };
@@ -271,7 +287,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getDownloadLink(final YouTubeData data) {
-        progress.setVisibility(View.VISIBLE);
+        spinningProgress.setVisibility(View.VISIBLE);
+        setStatus("Converting...", Color.BLACK);
+
         ServerDataService service = APIClientInstance.getServerRetrofitInstance().create(ServerDataService.class);
         Call<ServerData> call = service.getDownloadLink(data.getId(),
                 query.getEncoding().toString(),
@@ -280,12 +298,12 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<ServerData>() {
             @Override
             public void onResponse(Call<ServerData> call, Response<ServerData> response) {
-                progress.setVisibility(View.GONE);
+                spinningProgress.setVisibility(View.GONE);
                 Log.i(TAG, "Obtained server response");
 
                 if (!response.isSuccessful() || response.body() == null) {
                     Log.d(TAG, "Server error: " + response.message());
-                    statusTextView.setText("Oh, snap! Conversion failed.");
+                    setStatus("Oh, snap! Conversion failed", Color.BLACK);
                 } else {
                     String downloadLink = response.body().getDownloadLink();
                     Log.d(TAG, "Download link: " + downloadLink);
@@ -295,29 +313,78 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ServerData> call, Throwable t) {
-                progress.setVisibility(View.GONE);
+                spinningProgress.setVisibility(View.GONE);
                 Log.d(TAG, "Server error: " + t.getMessage());
-                statusTextView.setText("Oh, snap! Conversion failed.");
+                setStatus("Oh, snap! Conversion failed.", Color.BLACK);
             }
         });
     }
 
     private void downloadFile(String downloadLink, String fileName) {
-        Log.i(TAG, "Setting up download manager");
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadLink));
-        request.setTitle(fileName);
-        request.setDescription("Music-DL");
-        request.allowScanningByMediaScanner();
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-        DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-        if (manager != null) {
-            manager.enqueue(request);
-            Log.i(TAG, "Download started");
-        } else {
-            statusTextView.setText("Oops! Download failed");
+        if (downloadLink == null) {
+            setStatus("Failed to get download link", Color.BLACK);
+            return;
         }
+
+        /*setStatus("Opening link in browser...", Color.BLACK);
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadLink));
+        startActivity(browserIntent); */
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(downloadLink).build();
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                Log.d(TAG, "Download: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                if (!response.isSuccessful() || response.body() == null) {
+                    setStatus("Download failed", Color.BLACK);
+                    return;
+                }
+
+                runOnUiThread(() -> {
+                    setStatus("Downloading...", Color.BLACK);
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressPercent.setVisibility(View.VISIBLE);
+                });
+
+                ResponseBody body = response.body();
+                BufferedSource source = body.source();
+                long contentLength = body.contentLength();
+                File downloadPath = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS),
+                        fileName + "." + query.getEncoding().toString());
+                BufferedSink sink = Okio.buffer(Okio.sink(downloadPath));
+                Buffer sinkBuffer = sink.buffer();
+
+                long totalBytesRead = 0;
+                int bufferSize = 8 * 1024;
+
+                for (long bytesRead; (bytesRead = source.read(sinkBuffer, bufferSize)) != -1; ) {
+                    sink.emit();
+                    totalBytesRead += bytesRead;
+                    int progress = (int) Math.ceil((totalBytesRead * 100) / contentLength);
+                    runOnUiThread(() -> {
+                        progressBar.setProgress(progress);
+                        progressPercent.setText(String.format("%d%%", progress));
+                    });
+                }
+                sink.flush();
+                sink.close();
+                source.close();
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(downloadPath)));
+
+                runOnUiThread(() -> {
+                    setStatus("Download completed", Color.BLACK);
+                    progressPercent.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                });
+                Log.d(TAG, "Download completed");
+            }
+        });
     }
 
     @Override

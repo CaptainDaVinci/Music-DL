@@ -6,19 +6,43 @@
     android:padding="10dp"
     tools:context=".AboutActivity">
 
-    <TextView
-        android:id="@+id/new_update_textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/update_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:textColorLink="@android:color/holo_green_light"
-        android:textSize="20sp"
-        android:visibility="gone"></TextView>
+        android:gravity="center_vertical">
+
+        <ProgressBar
+            android:id="@+id/spin_progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></ProgressBar>
+
+        <TextView
+            android:id="@+id/check_updates_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Checking for updates..."
+            android:textSize="18sp"></TextView>
+
+        <Button
+            android:id="@+id/update_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/button"
+            android:onClick="update"
+            android:text="Update"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:visibility="gone"></Button>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/new_update_textView"
+        android:layout_below="@+id/update_layout"
         android:autoLink="email|web"
         android:linksClickable="true"
         android:text="@string/about"

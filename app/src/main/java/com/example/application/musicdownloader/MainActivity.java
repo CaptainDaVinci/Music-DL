@@ -1,19 +1,15 @@
 package com.example.application.musicdownloader;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,10 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.application.musicdownloader.api.APIClientInstance;
 import com.example.application.musicdownloader.api.server.ServerData;
@@ -43,16 +36,10 @@ import com.example.application.musicdownloader.query.Quality;
 import com.example.application.musicdownloader.query.Query;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
-import java.io.File;
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.ResponseBody;
-import okio.Buffer;
-import okio.BufferedSink;
-import okio.BufferedSource;
-import okio.Okio;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,8 +47,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MUSICDL";
     private EditText inputText;
-    private TextView statusTextView, progressPercent;
-    private ProgressBar spinningProgress, progressBar;
+    private TextView statusTextView;
+    private ProgressBar spinningProgress;
     private Query query;
 
     @Override
@@ -77,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         inputText = findViewById(R.id.input_text);
         statusTextView = findViewById(R.id.status_text);
         spinningProgress = findViewById(R.id.spinning_progress);
-        progressBar = findViewById(R.id.progress_bar);
-        progressPercent = findViewById(R.id.progress_percent);
 
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config);
@@ -146,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Log.i(TAG, "Query: " + query);
-        checkStoragePermission();
+        searchQuery();
     }
 
     public void clearButton(View view) {
@@ -160,41 +145,6 @@ public class MainActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    private void checkStoragePermission() {
-        if (Build.VERSION.SDK_INT >= 23) { // if android version >= 6.0
-            if (ContextCompat.checkSelfPermission(
-                    getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        1);
-            } else {
-                searchQuery();
-            }
-        } else {
-            searchQuery();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "Write permission granted");
-                    searchQuery();
-                } else {
-                    Log.i(TAG, "Write permission denied");
-                    Toast.makeText(MainActivity.this, "Permission denied to read your External storage",
-                            Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
     }
 
     void searchQuery() {
@@ -326,65 +276,14 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        /*setStatus("Opening link in browser...", Color.BLACK);
+        fileName = fileName.replaceAll("[^a-zA-Z]", "-") + "." +
+                query.getEncoding().toString();
+        downloadLink = downloadLink + "?filename=" + fileName;
+        Log.d(TAG, "Download link: " + downloadLink);
+
+        setStatus("Opening link in browser...", Color.BLACK);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadLink));
-        startActivity(browserIntent); */
-
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(downloadLink).build();
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                Log.d(TAG, "Download: " + e.getMessage());
-            }
-
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                if (!response.isSuccessful() || response.body() == null) {
-                    setStatus("Download failed", Color.BLACK);
-                    return;
-                }
-
-                runOnUiThread(() -> {
-                    setStatus("Downloading...", Color.BLACK);
-                    progressBar.setVisibility(View.VISIBLE);
-                    progressPercent.setVisibility(View.VISIBLE);
-                });
-
-                ResponseBody body = response.body();
-                BufferedSource source = body.source();
-                long contentLength = body.contentLength();
-                File downloadPath = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS),
-                        fileName + "." + query.getEncoding().toString());
-                BufferedSink sink = Okio.buffer(Okio.sink(downloadPath));
-                Buffer sinkBuffer = sink.buffer();
-
-                long totalBytesRead = 0;
-                int bufferSize = 8 * 1024;
-
-                for (long bytesRead; (bytesRead = source.read(sinkBuffer, bufferSize)) != -1; ) {
-                    sink.emit();
-                    totalBytesRead += bytesRead;
-                    int progress = (int) Math.ceil((totalBytesRead * 100) / contentLength);
-                    runOnUiThread(() -> {
-                        progressBar.setProgress(progress);
-                        progressPercent.setText(String.format("%d%%", progress));
-                    });
-                }
-                sink.flush();
-                sink.close();
-                source.close();
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(downloadPath)));
-
-                runOnUiThread(() -> {
-                    setStatus("Download completed", Color.BLACK);
-                    progressPercent.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                });
-                Log.d(TAG, "Download completed");
-            }
-        });
+        startActivity(browserIntent);
     }
 
     @Override

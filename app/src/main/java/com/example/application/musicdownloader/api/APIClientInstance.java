@@ -14,12 +14,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class APIClientInstance {
     private static final String YOUTUBE_URL = "https://www.googleapis.com/youtube/v3/";
     private static final String GITHUB_URL = "https://api.github.com/repos/CaptainDaVinci/Music-DL/releases/";
-    public static final String YOUTUBE_API_KEY = FirebaseRemoteConfig.getInstance().getString("YOUTUBE_API_KEY");
-    private static final String SERVER_URL = FirebaseRemoteConfig.getInstance().getString("SERVER_URL");
+    public static String YOUTUBE_API_KEY ;
+    private static String SERVER_URL;
     private static Retrofit youTubeRetrofit, serverRetrofit, githubRetrofit;
 
     public static Retrofit getYouTubeRetrofitInstance() {
-        Log.d(MainActivity.TAG, "Youtube API key " + YOUTUBE_API_KEY);
+        YOUTUBE_API_KEY = FirebaseRemoteConfig.getInstance().getString("YOUTUBE_API_KEY");
+        Log.d(MainActivity.TAG, "YouTube API key " + YOUTUBE_API_KEY);
         if (youTubeRetrofit == null) {
             youTubeRetrofit = new Retrofit.Builder()
                     .baseUrl(YOUTUBE_URL)
@@ -30,6 +31,7 @@ public class APIClientInstance {
     }
 
     public static Retrofit getServerRetrofitInstance() {
+        SERVER_URL = FirebaseRemoteConfig.getInstance().getString("SERVER_URL");
         Log.d(MainActivity.TAG, "Server URL " + SERVER_URL);
         if (serverRetrofit == null) {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()

@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         spinningProgress = findViewById(R.id.spinning_progress);
 
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config);
+        firebaseRemoteConfig.setDefaults(R.xml.remote_config);
         firebaseRemoteConfig.fetchAndActivate();
 
         inputText.setOnKeyListener((v, keyCode, event) -> {

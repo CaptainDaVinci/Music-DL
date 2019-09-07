@@ -1,128 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.application.musicdownloader.MainActivity"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="20dp">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/input_text"
-        android:layout_width="290dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:hint="@string/search_song"
-        android:inputType="textAutoComplete"
-        android:maxLines="1"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
 
-    <Button
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginBottom="5dp"
-        android:layout_alignBottom="@+id/input_text"
-        android:layout_toEndOf="@+id/input_text"
-        android:background="@drawable/backspace"
-        android:onClick="clearButton"/>
+        <EditText
+            android:id="@+id/input_text"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:hint="@string/search_song"
+            android:inputType="textAutoComplete"
+            android:maxLines="1" />
 
-    <TextView
-        android:id="@+id/format_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/format"
-        android:layout_marginTop="45dp"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/input_text" />
+        <Button
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignBottom="@+id/input_text"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@+id/input_text"
+            android:background="@drawable/backspace"
+            android:onClick="clearButton" />
 
-    <Spinner
-        android:id="@+id/format_spinner"
-        android:layout_width="120dp"
-        android:layout_height="30dp"
-        android:layout_alignBottom="@+id/format_text"
-        android:layout_marginStart="30dp"
-        android:textAlignment="center"
-        android:background="@drawable/box"
-        android:layout_toEndOf="@+id/format_text"
-        android:entries="@array/format">
-    </Spinner>
+        <TextView
+            android:id="@+id/format_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/input_text"
+            android:layout_marginTop="45dp"
+            android:text="@string/format"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/quality_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/quality"
-        android:layout_marginTop="30dp"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/format_text" />
+        <Spinner
+            android:id="@+id/format_spinner"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@+id/format_text"
+            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/format_text"
+            android:background="@drawable/box"
+            android:entries="@array/format"
+            android:textAlignment="center"></Spinner>
 
-    <Spinner
-        android:id="@+id/quality_spinner"
-        android:layout_width="120dp"
-        android:background="@drawable/box"
-        android:textAlignment="center"
-        android:layout_height="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_alignBottom="@+id/quality_text"
-        android:layout_alignEnd="@+id/format_spinner"
-        android:entries="@array/quality">
+        <TextView
+            android:id="@+id/quality_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/format_text"
+            android:layout_marginTop="30dp"
+            android:text="@string/quality"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
-    </Spinner>
+        <Spinner
+            android:id="@+id/quality_spinner"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:layout_alignEnd="@+id/format_spinner"
+            android:layout_alignBottom="@+id/quality_text"
+            android:layout_marginStart="30dp"
+            android:background="@drawable/box"
+            android:entries="@array/quality"
+            android:textAlignment="center">
 
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_below="@+id/quality_text"
-        android:layout_centerHorizontal="true"
-        android:text="@string/download"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:background="@drawable/button"
-        android:onClick="buttonClicked"/>
+        </Spinner>
 
-    <TextView
-        android:id="@+id/status_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/search_button"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textColor="@android:color/holo_red_light"/>
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/quality_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/button"
+            android:onClick="buttonClicked"
+            android:text="@string/download"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/search_button"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="18sp" />
 
 
-    <ProgressBar
-        android:id="@+id/spinning_progress"
-        android:layout_below="@+id/status_text"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:visibility="gone" />
+        <ProgressBar
+            android:id="@+id/spinning_progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/status_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:visibility="gone" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_height="8dp"
-        android:layout_below="@+id/status_text"
-        android:layout_centerHorizontal="true"
-        android:layout_width="fill_parent"
-        android:layout_marginTop="10dp"
-        android:progressDrawable="@drawable/progress_bar"
-        android:visibility="gone" />
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="8dp"
+            android:layout_below="@+id/status_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:progressDrawable="@drawable/progress_bar"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/progress_percent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/progress_bar"
-        android:textColor="@android:color/black"
-        android:textSize="14sp"
-        android:visibility="gone"></TextView>
+        <TextView
+            android:id="@+id/progress_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progress_bar"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:visibility="gone"></TextView>
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

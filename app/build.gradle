@@ -8,8 +8,8 @@ android {
         applicationId "com.example.application.musicdownloader"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 7
-        versionName "3.1"
+        versionCode 8
+        versionName "v1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -43,4 +43,5 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
 
     testImplementation 'junit:junit:4.12'
+    implementation 'com.google.android.material:material:1.0.0'
 }

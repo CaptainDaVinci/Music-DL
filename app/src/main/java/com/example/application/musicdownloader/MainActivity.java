@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -13,8 +15,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -27,6 +27,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.application.musicdownloader.api.APIClientInstance;
+import com.example.application.musicdownloader.api.github.GithubData;
+import com.example.application.musicdownloader.api.github.GithubDataService;
 import com.example.application.musicdownloader.api.server.ServerData;
 import com.example.application.musicdownloader.api.server.ServerDataService;
 import com.example.application.musicdownloader.api.youtube.YouTubeData;
@@ -34,6 +36,7 @@ import com.example.application.musicdownloader.api.youtube.YouTubeDataService;
 import com.example.application.musicdownloader.query.Encoding;
 import com.example.application.musicdownloader.query.Quality;
 import com.example.application.musicdownloader.query.Query;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.IOException;
@@ -50,11 +53,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView statusTextView;
     private ProgressBar spinningProgress;
     private Query query;
+    private GithubData data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        checkForUpdate();
 
         if (getIntent().getExtras() != null) {
             Log.d(TAG, "From notification: " + getIntent().getExtras());
@@ -81,6 +87,53 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             return false;
+        });
+    }
+
+    private void checkForUpdate() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout),
+                "New update available", Snackbar.LENGTH_INDEFINITE)
+                .setActionTextColor(getResources().getColor(R.color.colorPrimary))
+                .setAction("Update", view -> {
+                    if (data != null) {
+                        Log.d(MainActivity.TAG, "Opening " + data.getHtml_url());
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(data.getHtml_url()));
+                        startActivity(browserIntent);
+                    }
+                });
+
+        GithubDataService service = APIClientInstance.getGithubRetrofitInstance().create(GithubDataService.class);
+        Call<GithubData> call = service.getLatestRelease();
+
+        call.enqueue(new Callback<GithubData>() {
+            @Override
+            public void onResponse(Call<GithubData> call, Response<GithubData> response) {
+                Log.i(MainActivity.TAG, "Obtained Github response");
+
+                if (!response.isSuccessful() || response.body() == null) {
+                    Log.d(MainActivity.TAG, "Gtihub error: " + response.message());
+                } else {
+                    data = response.body();
+                    PackageInfo packageInfo = null;
+                    try {
+                        packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    String versionName = packageInfo != null ? packageInfo.versionName : "";
+                    Log.d(MainActivity.TAG, "Current version: " + data.getTag_name() +
+                            " Latest version: " + versionName);
+                    if (!versionName.equals(data.getTag_name())) {
+                        // update available.
+                        snackbar.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GithubData> call, Throwable t) {
+            }
         });
     }
 
@@ -284,18 +337,6 @@ public class MainActivity extends AppCompatActivity {
         setStatus("Opening link in browser...", Color.BLACK);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadLink));
         startActivity(browserIntent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    public void onAboutActivity(MenuItem menuItem) {
-        Log.d(TAG, "Open about activity");
-        Intent aboutActivityIntent = new Intent(MainActivity.this, AboutActivity.class);
-        startActivity(aboutActivityIntent);
     }
 
 }

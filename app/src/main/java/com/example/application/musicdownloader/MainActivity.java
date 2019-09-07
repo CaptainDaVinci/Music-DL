@@ -73,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config);
-        firebaseRemoteConfig.activate();
-        firebaseRemoteConfig.fetch();
+        firebaseRemoteConfig.fetchAndActivate();
 
         inputText.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN
@@ -219,6 +218,9 @@ public class MainActivity extends AppCompatActivity {
                     spinningProgress.setVisibility(View.GONE);
                     setStatus("Oh, snap! Search failed", Color.BLACK);
                     Log.d(TAG, "YouTube error: " + response.message());
+                    Log.d(TAG, "Headers: " + response.headers().toString());
+                    Log.d(TAG, "Body: " + response.body());
+                    Log.d(TAG, "Successful: " + response.isSuccessful());
                 } else {
                     showResponse(response.body());
                 }
@@ -305,8 +307,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "Obtained server response");
 
                 if (!response.isSuccessful() || response.body() == null) {
-                    Log.d(TAG, "Server error: " + response.message());
                     setStatus("Oh, snap! Conversion failed", Color.BLACK);
+                    Log.d(TAG, "Server error: " + response.message());
+                    Log.d(TAG, "Headers: " + response.headers().toString());
+                    Log.d(TAG, "Body: " + response.body());
+                    Log.d(TAG, "Successful: " + response.isSuccessful());
                 } else {
                     String downloadLink = response.body().getDownloadLink();
                     Log.d(TAG, "Download link: " + downloadLink);

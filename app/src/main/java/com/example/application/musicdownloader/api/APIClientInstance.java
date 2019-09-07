@@ -1,5 +1,8 @@
 package com.example.application.musicdownloader.api;
 
+import android.util.Log;
+
+import com.example.application.musicdownloader.MainActivity;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.concurrent.TimeUnit;
@@ -16,6 +19,7 @@ public class APIClientInstance {
     private static Retrofit youTubeRetrofit, serverRetrofit, githubRetrofit;
 
     public static Retrofit getYouTubeRetrofitInstance() {
+        Log.d(MainActivity.TAG, "Youtube API key " + YOUTUBE_API_KEY);
         if (youTubeRetrofit == null) {
             youTubeRetrofit = new Retrofit.Builder()
                     .baseUrl(YOUTUBE_URL)
@@ -26,6 +30,7 @@ public class APIClientInstance {
     }
 
     public static Retrofit getServerRetrofitInstance() {
+        Log.d(MainActivity.TAG, "Server URL " + SERVER_URL);
         if (serverRetrofit == null) {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(20, TimeUnit.SECONDS)

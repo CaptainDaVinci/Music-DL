@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1026730763067",
+    "firebase_url": "https://musicdownloader-75df6.firebaseio.com",
+    "project_id": "musicdownloader-75df6",
+    "storage_bucket": "musicdownloader-75df6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026730763067:android:f286e1f8101e7724",
+        "android_client_info": {
+          "package_name": "com.example.application.musicdownloader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026730763067-7ub4m9aqtd7m0toa4f8s6m8tgn2m5aar.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.application.musicdownloader",
+            "certificate_hash": "d50bf4286e04501fcdad87dcf7a6f3391e1377de"
+          }
+        },
+        {
+          "client_id": "1026730763067-lk43eu1o86unarhaa8qg1dmk4mmag70d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeqvXJnrhqvOnL5ie4EoKvImxhyz9be5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026730763067-lk43eu1o86unarhaa8qg1dmk4mmag70d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

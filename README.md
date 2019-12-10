@@ -14,6 +14,5 @@ or mp4 file and then returns the link to the file back to the application.
 
 ## Contibuting
 
-To start contributing you can clone the forked project ([forked?](https://www.digitalocean.com/community/tutorials/how-to-create-a-pull-request-on-github)) in android studio from GitHub ([how to?](https://www.londonappdeveloper.com/how-to-clone-a-github-project-on-android-studio/)), and that's i
-t! You can start contributing by solving issues listed [here](https://github.com/CaptainDaVinci/Music-DL/issues) or
+To start contributing you can clone the forked project ([forked?](https://www.digitalocean.com/community/tutorials/how-to-create-a-pull-request-on-github)) in android studio ([how to?](https://www.londonappdeveloper.com/how-to-clone-a-github-project-on-android-studio/)), and that's it! You can start contributing by solving issues listed [here](https://github.com/CaptainDaVinci/Music-DL/issues) or
 if you find issues or want to suggest features, you can do so under the issues tab.

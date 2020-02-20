@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
         downloadLink = downloadLink + "?filename=" + fileName;
         Log.d(TAG, "Download link: " + downloadLink);
 
-        setStatus("Opening link in browser...", Color.BLACK);
+        setStatus("Opening " + downloadLink + " in browser...", Color.BLACK);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadLink));
         startActivity(browserIntent);
     }

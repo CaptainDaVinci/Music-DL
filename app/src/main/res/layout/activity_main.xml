@@ -46,7 +46,7 @@
             android:layout_toEndOf="@+id/format_text"
             android:background="@drawable/box"
             android:entries="@array/format"
-            android:textAlignment="center"></Spinner>
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/quality_text"
@@ -93,6 +93,9 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:textAlignment="center"
+            android:autoLink="web"
+            android:linksClickable="true"
+            android:textColorLink="@android:color/holo_blue_light"
             android:textColor="@android:color/holo_red_light"
             android:textSize="18sp" />
 
@@ -106,26 +109,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:visibility="gone" />
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="8dp"
-            android:layout_below="@+id/status_text"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:progressDrawable="@drawable/progress_bar"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/progress_percent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/progress_bar"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            android:visibility="gone"></TextView>
 
     </RelativeLayout>
 

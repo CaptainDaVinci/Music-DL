@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>YOUTUBE_API_KEY</key>
-        <value>AIzaSyDBs8dEBTzXOac8jUDnInjvdLirGyMYNZI</value>
-    </entry>
-
-    <entry>
         <key>SERVER_URL</key>
         <value>http://3.84.203.42/</value>
     </entry>

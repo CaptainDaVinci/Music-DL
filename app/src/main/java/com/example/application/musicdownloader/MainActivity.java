@@ -27,12 +27,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.application.musicdownloader.api.APIClientInstance;
-import com.example.application.musicdownloader.api.github.GithubData;
-import com.example.application.musicdownloader.api.github.GithubDataService;
-import com.example.application.musicdownloader.api.server.ServerData;
-import com.example.application.musicdownloader.api.server.ServerDataService;
-import com.example.application.musicdownloader.api.youtube.YouTubeData;
-import com.example.application.musicdownloader.api.youtube.YouTubeDataService;
+import com.example.application.musicdownloader.api.github.model.GithubData;
+import com.example.application.musicdownloader.api.github.service.GithubDataService;
+import com.example.application.musicdownloader.api.server.model.ServerDownloadData;
+import com.example.application.musicdownloader.api.server.model.ServerQueryData;
+import com.example.application.musicdownloader.api.server.service.ServerDataService;
 import com.example.application.musicdownloader.query.Encoding;
 import com.example.application.musicdownloader.query.Quality;
 import com.example.application.musicdownloader.query.Query;
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        GithubDataService service = APIClientInstance.getGithubRetrofitInstance().create(GithubDataService.class);
+        GithubDataService service = APIClientInstance.getGithubDataService();
         Call<GithubData> call = service.getLatestRelease();
 
         call.enqueue(new Callback<GithubData>() {
@@ -203,16 +202,12 @@ public class MainActivity extends AppCompatActivity {
         setStatus("Searching", Color.BLACK);
         spinningProgress.setVisibility(View.VISIBLE);
 
-        YouTubeDataService service = APIClientInstance.getYouTubeRetrofitInstance().create(YouTubeDataService.class);
-        Call<YouTubeData> call = service.getYouTubeData("snippet",
-                query.getSearch(),
-                "video",
-                "1",
-                APIClientInstance.YOUTUBE_API_KEY);
+        ServerDataService service = APIClientInstance.getServerDataService();
+        Call<ServerQueryData> call = service.getYouTubeId(query.getSearch());
 
-        call.enqueue(new Callback<YouTubeData>() {
+        call.enqueue(new Callback<ServerQueryData>() {
             @Override
-            public void onResponse(Call<YouTubeData> call, Response<YouTubeData> response) {
+            public void onResponse(Call<ServerQueryData> call, Response<ServerQueryData> response) {
                 Log.i(TAG, "Obtained YouTube response");
                 if (!response.isSuccessful() || response.body() == null) {
                     spinningProgress.setVisibility(View.GONE);
@@ -227,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<YouTubeData> call, Throwable t) {
+            public void onFailure(Call<ServerQueryData> call, Throwable t) {
                 spinningProgress.setVisibility(View.GONE);
                 setStatus("Oh, snap! Search failed", Color.BLACK);
                 Log.d(TAG, "YouTube error: " + t.getMessage());
@@ -235,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void showResponse(final YouTubeData data) {
+    private void showResponse(final ServerQueryData data) {
         spinningProgress.setVisibility(View.GONE);
         setStatus("", Color.BLACK);
 
@@ -246,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i(TAG, "Set information for confirmation dialog");
         titleTextView.setText(data.getTitle());
-        setThumbnail(imageView, data.getThumbnailURL());
+        setThumbnail(imageView, data.getThumbnailUrl());
 
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
@@ -291,18 +286,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getDownloadLink(final YouTubeData data) {
+    private void getDownloadLink(final ServerQueryData data) {
         spinningProgress.setVisibility(View.VISIBLE);
         setStatus("Converting...", Color.BLACK);
 
-        ServerDataService service = APIClientInstance.getServerRetrofitInstance().create(ServerDataService.class);
-        Call<ServerData> call = service.getDownloadLink(data.getId(),
+        ServerDataService service = APIClientInstance.getServerDataService();
+        Call<ServerDownloadData> call = service.getDownloadLink(data.getId(),
                 query.getEncoding().toString(),
                 query.getQuality().toString());
 
-        call.enqueue(new Callback<ServerData>() {
+        call.enqueue(new Callback<ServerDownloadData>() {
             @Override
-            public void onResponse(Call<ServerData> call, Response<ServerData> response) {
+            public void onResponse(Call<ServerDownloadData> call, Response<ServerDownloadData> response) {
                 spinningProgress.setVisibility(View.GONE);
                 Log.i(TAG, "Obtained server response");
 
@@ -320,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ServerData> call, Throwable t) {
+            public void onFailure(Call<ServerDownloadData> call, Throwable t) {
                 spinningProgress.setVisibility(View.GONE);
                 Log.d(TAG, "Server error: " + t.getMessage());
                 setStatus("Oh, snap! Conversion failed.", Color.BLACK);

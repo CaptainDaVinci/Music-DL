@@ -1,8 +1,8 @@
-package com.example.application.musicdownloader.api.server;
+package com.example.application.musicdownloader.api.server.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ServerData {
+public class ServerDownloadData {
     @SerializedName("download_link")
     private String downloadLink;
 

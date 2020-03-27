@@ -1,4 +1,4 @@
-package com.example.application.musicdownloader.api.github;
+package com.example.application.musicdownloader.api.github.model;
 
 import com.google.gson.annotations.SerializedName;
 

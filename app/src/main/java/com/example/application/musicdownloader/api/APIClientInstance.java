@@ -12,14 +12,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIClientInstance {
     private static final String GITHUB_URL = "https://api.github.com/repos/CaptainDaVinci/Music-DL/releases/";
-    private static String SERVER_URL;
     private static Retrofit serverRetrofit, githubRetrofit;
     private static ServerDataService serverDataService;
     private static GithubDataService githubDataService;
 
 
     private static Retrofit getServerRetrofitInstance() {
-        SERVER_URL = FirebaseRemoteConfig.getInstance().getString("SERVER_URL");
+        String SERVER_URL = FirebaseRemoteConfig.getInstance().getString("SERVER_URL");
         if (serverRetrofit == null) {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(20, TimeUnit.SECONDS)

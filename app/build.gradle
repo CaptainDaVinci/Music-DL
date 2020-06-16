@@ -8,8 +8,8 @@ android {
         applicationId "com.example.application.musicdownloader"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 10
-        versionName "v1.2"
+        versionCode 11
+        versionName "v1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

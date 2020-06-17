@@ -4,4 +4,7 @@
     <color name="colorPrimary">@android:color/holo_red_dark</color>
     <color name="colorPrimaryDark">#600202</color>
     <color name="colorAccent">@android:color/black</color>
+    <color name="colorUnSelected">#efefef</color>
+    <color name="colorSelected">#A2A2A2</color>
+    <color name="neutral">#000000</color>
 </resources>

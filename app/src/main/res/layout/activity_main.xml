@@ -7,69 +7,146 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp">
+        android:padding="10dp">
 
-        <EditText
-            android:id="@+id/input_text"
-            android:layout_width="290dp"
+        <LinearLayout
+            android:id="@+id/input_text_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:hint="@string/search_song"
-            android:inputType="textAutoComplete"
-            android:maxLines="1" />
+            android:orientation="horizontal">
 
-        <Button
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignBottom="@+id/input_text"
-            android:layout_marginBottom="5dp"
-            android:layout_toEndOf="@+id/input_text"
-            android:background="@drawable/backspace"
-            android:onClick="clearButton" />
+            <EditText
+                android:id="@+id/input_text"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_weight="0.90"
+                android:hint="@string/search_song"
+                android:inputType="textAutoComplete"
+                android:maxLines="1" />
+
+            <Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="0.1"
+                android:background="@drawable/backspace"
+                android:onClick="clearButton" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/format_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/input_text"
+            android:layout_below="@id/input_text_layout"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="45dp"
             android:text="@string/format"
             android:textColor="@android:color/black"
             android:textSize="20sp" />
 
-        <Spinner
-            android:id="@+id/format_spinner"
-            android:layout_width="120dp"
-            android:layout_height="30dp"
+        <!--        <Spinner-->
+        <!--            android:id="@+id/format_spinner"-->
+        <!--            android:layout_width="120dp"-->
+        <!--            android:layout_height="30dp"-->
+        <!--            android:layout_alignBottom="@+id/format_text"-->
+        <!--            android:layout_marginStart="30dp"-->
+        <!--            android:layout_toEndOf="@+id/format_text"-->
+        <!--            android:background="@drawable/box"-->
+        <!--            android:entries="@array/format"-->
+        <!--            android:textAlignment="center" />-->
+
+        <RadioGroup
+            android:id="@+id/format_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:layout_alignBottom="@+id/format_text"
-            android:layout_marginStart="30dp"
+            android:layout_marginEnd="10dp"
             android:layout_toEndOf="@+id/format_text"
-            android:background="@drawable/box"
-            android:entries="@array/format"
-            android:textAlignment="center" />
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_audio"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_weight="0.50"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:checked="true"
+                android:gravity="center"
+                android:text="@string/audio"
+                android:textColor="@color/neutral" />
+
+            <RadioButton
+                android:id="@+id/radio_video"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_weight="0.50"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:text="@string/video"
+                android:textColor="@color/neutral" />
+        </RadioGroup>
 
         <TextView
             android:id="@+id/quality_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/format_text"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="30dp"
             android:text="@string/quality"
             android:textColor="@android:color/black"
             android:textSize="20sp" />
 
-        <Spinner
-            android:id="@+id/quality_spinner"
-            android:layout_width="120dp"
-            android:layout_height="30dp"
-            android:layout_alignEnd="@+id/format_spinner"
-            android:layout_alignBottom="@+id/quality_text"
-            android:layout_marginStart="30dp"
-            android:background="@drawable/box"
-            android:entries="@array/quality"
-            android:textAlignment="center">
+        <!--        <Spinner-->
+        <!--            android:id="@+id/quality_spinner"-->
+        <!--            android:layout_width="120dp"-->
+        <!--            android:layout_height="30dp"-->
+        <!--            android:layout_alignEnd="@+id/format_spinner"-->
+        <!--            android:layout_alignBottom="@+id/quality_text"-->
+        <!--            android:layout_marginStart="30dp"-->
+        <!--            android:background="@drawable/box"-->
+        <!--            android:entries="@array/quality"-->
+        <!--            android:textAlignment="center">-->
 
-        </Spinner>
+        <!--        </Spinner>-->
+        <RadioGroup
+            android:id="@+id/qualilty_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_alignBottom="@+id/quality_text"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/quality_text"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_high"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_weight="0.50"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:checked="true"
+                android:gravity="center"
+                android:text="@string/high_quality"
+                android:textColor="@color/neutral" />
+
+            <RadioButton
+                android:id="@+id/radio_low"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_weight="0.50"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:text="@string/low_quality"
+                android:textColor="@color/neutral" />
+        </RadioGroup>
 
         <Button
             android:id="@+id/search_button"
@@ -99,7 +176,6 @@
             android:textColor="@android:color/holo_red_light"
             android:textSize="18sp" />
 
-
         <ProgressBar
             android:id="@+id/spinning_progress"
             style="?android:attr/progressBarStyle"
@@ -109,6 +185,14 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_alignParentBottom="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/make_in_india"></ImageView>
+
 
     </RelativeLayout>
 

@@ -20,7 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -158,22 +158,25 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Spinner format_spinner = findViewById(R.id.format_spinner);
-        Spinner quality_spinner = findViewById(R.id.quality_spinner);
+        RadioGroup format_radio_group = findViewById(R.id.format_radio_group);
+        RadioGroup quality_radio_group = findViewById(R.id.qualilty_radio_group);
 
-        String quality = quality_spinner.getSelectedItem().toString();
-        String format = format_spinner.getSelectedItem().toString();
-
-        if (quality.equals(getString(R.string.high_quality))) {
-            query.setQuality(Quality.high);
-        } else {
-            query.setQuality(Quality.low);
+        switch (format_radio_group.getCheckedRadioButtonId()) {
+            case R.id.radio_audio:
+                query.setEncoding(Encoding.mp3);
+                break;
+            case R.id.radio_video:
+                query.setEncoding(Encoding.mp4);
+                break;
         }
 
-        if (format.equals(getString(R.string.audio))) {
-            query.setEncoding(Encoding.mp3);
-        } else {
-            query.setEncoding(Encoding.mp4);
+        switch (quality_radio_group.getCheckedRadioButtonId()) {
+            case R.id.radio_high:
+                query.setQuality(Quality.high);
+                break;
+            case R.id.radio_low:
+                query.setQuality(Quality.low);
+                break;
         }
 
         if (!hasNetwork()) {
